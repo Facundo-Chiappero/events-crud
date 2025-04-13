@@ -1,3 +1,7 @@
+# Events CRUD
+
+you can access the web site through this link [Events CRUD](https://events-crud.netlify.app/)
+
 ## Features
 
 ### Users
@@ -47,7 +51,10 @@ Password: admin
 
 ### 1. Clone the repository
 
-- download the file
+```bash
+git clone https://github.com/Facundo-Chiappero/events-crud.git
+cd events-crud
+```
 
 - with a cmd inside the root folder execute
 
@@ -60,7 +67,8 @@ npm run dev
 
 ```bash
 npm i
-node run start
+npm run build
+npm run start
 ```
 
 ## Frontend Commands
