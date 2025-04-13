@@ -2,6 +2,7 @@
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { BACKEND } from '../utils/const'
 
 interface Props {
   title: string
@@ -19,7 +20,7 @@ export default function CheckOutButton({ title, price }: Props) {
     ;(async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3000/create_preference',
+          `${BACKEND}/create_preference`,
           {
             id: preferenceId,
             title: title,

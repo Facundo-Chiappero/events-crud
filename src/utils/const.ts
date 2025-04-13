@@ -2,4 +2,4 @@
 export const BACKEND =
   import.meta.env.MODE === 'development'
     ? 'http://localhost:3000'
-    : '/.netlify/functions'
+    : 'https://events-crud.onrender.com'
