@@ -56,48 +56,90 @@ export const createPreference: RequestHandler = async (req, res) => {
   }
 }
 
-export const handleWebhook: RequestHandler = async (req, res) => {
-
+export const handleWebhook: RequestHandler = async (req, res): Promise<void> => {
   try {
     const { topic, resource } = req.body
 
-    if (topic === 'payment') {
-      const paymentId = resource
+    if (!topic || !resource) {
+      console.warn('❌ Webhook sin topic o resource')
+      res.sendStatus(400)
+      return
+    }
 
-      const response = await fetch(`${PAYMENT.MERCADO_PAGO_URL}/${paymentId}`, {
+    console.log('📩 Webhook recibido:', req.body)
+
+    let paymentId: string | null = null
+
+    if (topic === 'payment') {
+      paymentId = resource
+    } else if (topic === 'merchant_order') {
+      const orderRes = await fetch(`https://api.mercadopago.com/merchant_orders/${resource}`, {
         headers: {
           Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
         },
       })
 
-      const paymentData = await response.json()
-      
-      if (paymentData.status === PAYMENT.APPROVED || paymentData.status === 'merchant_order') {
-        const amount = paymentData.transaction_amount
-        const userId = paymentData.metadata?.data?.user_id
-        const eventId = paymentData.metadata?.data?.event_id
+      const orderData = await orderRes.json()
 
-        if (!userId || !eventId) {
-          console.warn(PAYMENT_ERRORS.WEBHOOK_NO_METADATA)
-          res.sendStatus(400)
-          return
-        }
-
-        await prisma.payment.create({
-          data: {
-            userId,
-            eventId,
-            amount,
-          },
-        })
-
-        console.log(PAYMENT_MESSAGES.WEBHOOK_SAVE_SUCCESS)
+      if (!orderData.payments || orderData.payments.length === 0) {
+        console.warn('⚠️ Orden sin pagos aún')
+        res.sendStatus(200)
+        return
       }
+
+      const approvedPayment = orderData.payments.find((p: any) => p.status === 'approved')
+
+      if (!approvedPayment) {
+        console.warn('⚠️ No hay pagos aprobados aún')
+        res.sendStatus(200)
+        return
+      }
+
+      paymentId = approvedPayment.id
+    }
+
+    if (!paymentId) {
+      console.warn('❌ No se encontró paymentId')
+      res.sendStatus(400)
+      return 
+    }
+
+    const paymentRes = await fetch(`${PAYMENT.MERCADO_PAGO_URL}/${paymentId}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+      },
+    })
+
+    const paymentData = await paymentRes.json()
+    console.log('📄 Datos del pago:', paymentData)
+
+    if (paymentData.status === PAYMENT.APPROVED) {
+      const amount = paymentData.transaction_amount
+      const userId = paymentData.metadata?.data?.user_id
+      const eventId = paymentData.metadata?.data?.event_id
+
+      if (!userId || !eventId) {
+        console.warn(PAYMENT_ERRORS.WEBHOOK_NO_METADATA)
+        res.sendStatus(400)
+        return
+      }
+
+      await prisma.payment.create({
+        data: {
+          userId,
+          eventId,
+          amount,
+        },
+      })
+
+      console.log(PAYMENT_MESSAGES.WEBHOOK_SAVE_SUCCESS)
     }
 
     res.sendStatus(200)
+    return
   } catch (error) {
     console.error(PAYMENT_ERRORS.WEBHOOK, error)
     res.sendStatus(500)
+    return
   }
 }
