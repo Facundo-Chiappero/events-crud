@@ -28,7 +28,7 @@ model Event {
   description String
   date        DateTime
   price       Float
-  images      String[] //this should be the url to the image
+  images      String[]
   creator     User      @relation("CreatedEvents", fields: [creatorId], references: [id])
   creatorId   Int
   payments    Payment[] @relation("EventPayments")
@@ -38,8 +38,8 @@ model Payment {
   id        Int      @id @default(autoincrement())
   user      User     @relation("UserPayments", fields: [userId], references: [id])
   userId    Int
-  event     Event    @relation("EventPayments", fields: [eventId], references: [id])
-  eventId   Int
+  event     Event?   @relation("EventPayments", fields: [eventId], references: [id], onDelete: SetNull)
+  eventId   Int?
   amount    Float
   createdAt DateTime @default(now())
 }

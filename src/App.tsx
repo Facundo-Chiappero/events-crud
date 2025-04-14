@@ -2,7 +2,6 @@ import { useContext } from 'react'
 import { StoreContext } from './hooks/useStore'
 import Auth from './components/Auth'
 import Main from './components/Main'
-import { Spinner } from './components/Icons'
 
 function App() {
   const { state } = useContext(StoreContext)!
@@ -10,11 +9,7 @@ function App() {
   return (
     <>
       {
-        state.loading ? (
-          <div className="flex items-center justify-center text-4xl min-h-[100vh] w-[100%] bg-gray-900">
-            <Spinner />
-          </div> //show this if its loading
-        ) : state.user ? (
+        state.user ? (
           <Main />
         ) : (
           <Auth />

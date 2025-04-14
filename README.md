@@ -1,5 +1,9 @@
 # Events CRUD
 
+**IMPORTANT**
+
+The API in production is actually connected to my mercado pago account, any purchase you do will send me the money.
+
 you can access the web site through this link [Events CRUD](https://events-crud.netlify.app/)
 
 ## Features
@@ -64,7 +68,7 @@ Password: admin
 ### Local deploy
 
 **IMPORTANT**
-Step 3 is needed every time you change something in `backend` folder
+Step 4 is needed every time you change something in `backend` folder
 
 #### 1. Clone the repository
 
@@ -87,7 +91,24 @@ npm i
 npm i
 ```
 
-#### 3. Prepare the environment
+#### 3. Set the environment variables
+
+`backend/.env`
+
+```bash
+DATABASE_URL="your-postgreSQL-database"
+FRONTEND='your-frontend-url'
+BACKEND='your-backend-url'
+MP_ACCESS_TOKEN="your-development-mercado-pago-access-token"
+```
+
+`.env.local`
+
+```bash
+VITE_MP_PUBLIC_KEY="your-development-mercado-pago-public-key"
+```
+
+#### 4. Prepare the environment
 
 - With a cmd inside the backend folder execute
 
@@ -130,6 +151,20 @@ cd events-crud
 - Upload the folder to a hosting service (i used [render](render.com) for backend and [netlify](netlify.com) for frontend)
 
 - Set the environment variables
+  `backend/.env`
+
+```bash
+DATABASE_URL="your-postgreSQL-database"
+FRONTEND='your-frontend-url'
+BACKEND='your-backend-url'
+MP_ACCESS_TOKEN="your-development-mercado-pago-access-token"
+```
+
+`.env.local`
+
+```bash
+VITE_MP_PUBLIC_KEY="your-development-mercado-pago-public-key"
+```
 
 - For render you will need to specify the following commands
 

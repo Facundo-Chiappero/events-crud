@@ -48,6 +48,8 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
 export const deleteEvent: RequestHandler = async (req, res) => {
   const { id } = req.body
+  console.log(id);
+  
 
   if (!id) {
     res.status(400).json({ message: EVENT_MESSAGES.MISSING_ID })

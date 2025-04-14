@@ -2,11 +2,13 @@
 
 export const BACKEND =
   import.meta.env.MODE === 'development'
-    ? 'https://yummy-frogs-exist.loca.lt' // in development BACKEND has this value
+    ? 'http://localhost:3000' // in development BACKEND has this value
     : 'https://events-crud.onrender.com'
 
 //the first link is given by localtunnel, required to use mercado pago webhooks, run: `npm run tunnel` in backend folder to get a url, enter the url, enter the link bellow the blue button, copy the numbers and paste on the input field, then you can use de tunnel . you also need to update the url in mercado pago web page.
 //the second link is where the backend is deployed
+
+//you can also just put http://localhost:3000 if you don't care about mercado pago
 
 export const AUTH = {
   SIGN_UP: 'Sign up',
