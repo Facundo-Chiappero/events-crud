@@ -15,10 +15,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-button {
-  @apply cursor-pointer;
-}
-
 input[type='datetime-local']::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;

@@ -86,7 +86,7 @@ export default function Auth() {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600"
+              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 cursor-pointer"
             >
               {AUTH.SIGN_UP}
             </button>
@@ -133,7 +133,7 @@ export default function Auth() {
             </div>
             <button
               type="submit"
-              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600"
+              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 cursor-pointer"
             >
               {AUTH.LOG_IN}
             </button>

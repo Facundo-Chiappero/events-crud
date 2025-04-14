@@ -97,14 +97,14 @@ export default function CreateModal({
           <div className="flex justify-end gap-4">
             <button
               type="submit"
-              className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
             >
               {MODAL_TEXTS.BUTTON_SAVE}
             </button>
             <button
               type="button"
               onClick={() => setShowUpdateModal(false)}
-              className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+              className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
             >
               {MODAL_TEXTS.BUTTON_CANCEL}
             </button>

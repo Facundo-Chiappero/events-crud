@@ -90,13 +90,13 @@ export default function Main() {
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => openEditModal(event)}
-                    className="bg-blue-600 p-2 rounded hover:bg-blue-700"
+                    className="bg-blue-600 p-2 rounded hover:bg-blue-700 cursor-pointer"
                   >
                     <Clipboard />
                   </button>
                   <button
                     onClick={() => openDeleteModal(event)}
-                    className="bg-red-600 p-2 rounded hover:bg-red-700"
+                    className="bg-red-600 p-2 rounded hover:bg-red-700 cursor-pointer"
                   >
                     <Trash />
                   </button>
@@ -106,7 +106,7 @@ export default function Main() {
               {state.user?.role === ROLES.USER && (
                 <button
                   onClick={() => openPurchaseModal(event)}
-                  className="bg-green-500 text-white p-3 rounded hover:bg-green-600 mt-4"
+                  className="bg-green-500 text-white p-3 rounded hover:bg-green-600 mt-4 cursor-pointer"
                 >
                   {MAIN.BUY_BUTTON}
                 </button>

@@ -58,7 +58,11 @@ export const createPreference: RequestHandler = async (req, res) => {
 
 export const handleWebhook: RequestHandler = async (req, res): Promise<void> => {
   try {
-    const { topic, resource } = req.body
+    console.log('✅ Webhook recibido:', JSON.stringify(req.body, null, 2))
+
+    const topic = req.body.topic || req.body.type;
+    const resource = req.body.resource || req.body.data?.id;
+
 
     if (!topic || !resource) {
       console.warn('❌ Webhook sin topic o resource')
@@ -72,7 +76,7 @@ export const handleWebhook: RequestHandler = async (req, res): Promise<void> => 
 
     if (topic === 'payment') {
       paymentId = resource
-    } else if (topic === 'merchant_order') {
+    } else if (topic === 'merchant_order' || topic === 'topic_merchant_order_wh') {
       const orderRes = await fetch(`https://api.mercadopago.com/merchant_orders/${resource}`, {
         headers: {
           Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,

@@ -72,8 +72,7 @@ export default function PurchaseModal({ event, onClose, user }: Props) {
             />
 
             <button
-              className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 max-h-fit
-              "
+              className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 max-h-fit cursor-pointer"
               onClick={onClose}
             >
               {MODAL_TEXTS.BUTTON_CANCEL}

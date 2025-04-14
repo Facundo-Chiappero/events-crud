@@ -20,7 +20,7 @@ export default function MainHeader({ user, openCreateModal }: Props) {
         {user?.role === ROLES.ADMIN && (
           <button
             onClick={openCreateModal}
-            className="px-4 py-2 rounded bg-green-500 text-white p-3 hover:bg-green-600"
+            className="px-4 py-2 rounded bg-green-500 text-white p-3 hover:bg-green-600 cursor-pointer"
           >
             {HEADER.CREATE_EVENT_BUTTON}
           </button>
@@ -28,7 +28,7 @@ export default function MainHeader({ user, openCreateModal }: Props) {
 
         <button
           onClick={logout}
-          className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+          className="bg-red-600 px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
         >
           {HEADER.LOGOUT_BUTTON}
         </button>
