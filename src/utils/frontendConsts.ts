@@ -1,12 +1,11 @@
 // all the text is here, to avoid using magic strings
 
-// in development BACKEND const is localhost
 export const BACKEND =
   import.meta.env.MODE === 'development'
-    ? 'https://yummy-frogs-exist.loca.lt'
+    ? 'https://yummy-frogs-exist.loca.lt' // in development BACKEND has this value
     : 'https://events-crud.onrender.com'
 
-//the first link is given by localtunnel, required to use mercado pago webhooks, run: `npm run tunnel` in backend folder to get a url, enter the url, enter the link bellow the big blue button, copy the numbers and paste on the input field, then you can use de tunnel . you also need to update the url in mercado pago web page.
+//the first link is given by localtunnel, required to use mercado pago webhooks, run: `npm run tunnel` in backend folder to get a url, enter the url, enter the link bellow the blue button, copy the numbers and paste on the input field, then you can use de tunnel . you also need to update the url in mercado pago web page.
 //the second link is where the backend is deployed
 
 export const AUTH = {
