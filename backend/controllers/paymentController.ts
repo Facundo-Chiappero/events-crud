@@ -60,12 +60,12 @@ export const handleWebhook: RequestHandler = async (req, res): Promise<void> => 
   try {
     console.log('✅ Webhook recibido:', JSON.stringify(req.body, null, 2))
 
-    const topic = req.body.topic || req.body.type;
-    const resource = req.body.resource || req.body.data?.id;
+    const topic = req.body.type;
+    const resource = req.body.id;
 
 
     if (!topic || !resource) {
-      console.warn('❌ Webhook sin topic o resource')
+      console.warn('❌ Webhook sin topic o id')
       res.sendStatus(400)
       return
     }
@@ -74,9 +74,7 @@ export const handleWebhook: RequestHandler = async (req, res): Promise<void> => 
 
     let paymentId: string | null = null
 
-    if (topic === 'payment') {
-      paymentId = resource
-    } else if (topic === 'merchant_order' || topic === 'topic_merchant_order_wh') {
+      if (topic === 'merchant_order' || topic === 'topic_merchant_order_wh') {
       const orderRes = await fetch(`https://api.mercadopago.com/merchant_orders/${resource}`, {
         headers: {
           Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
