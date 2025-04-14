@@ -81,7 +81,9 @@ export const handleWebhook: RequestHandler = async (req, res): Promise<void> => 
         },
       })
 
+      console.log(orderRes)
       const orderData = await orderRes.json()
+      console.log(orderData)
 
       if (!orderData.payments || orderData.payments.length === 0) {
         console.warn('⚠️ Orden sin pagos aún')
