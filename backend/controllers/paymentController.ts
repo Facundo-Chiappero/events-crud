@@ -71,8 +71,8 @@ export const handleWebhook: RequestHandler = async (req, res) => {
       })
 
       const paymentData = await response.json()
-
-      if (paymentData.status === PAYMENT.APPROVED) {
+      
+      if (paymentData.status === PAYMENT.APPROVED || paymentData.status === 'merchant_order') {
         const amount = paymentData.transaction_amount
         const userId = paymentData.metadata?.data?.user_id
         const eventId = paymentData.metadata?.data?.event_id
