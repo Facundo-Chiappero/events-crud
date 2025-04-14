@@ -6,7 +6,8 @@
   "scripts": {
   "build": "tsc",
   "start": "node dist/index.js",
-  "generate": "npx prisma generate"
+  "generate": "npx prisma generate",
+  "tunnel": "npx localtunnel --port 3000"
 }
 ,
   "keywords": [],

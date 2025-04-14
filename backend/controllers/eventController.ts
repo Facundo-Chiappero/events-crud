@@ -1,9 +1,9 @@
-import { RequestHandler } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { RequestHandler } from 'express'
+import { PrismaClient } from '@prisma/client'
+import { EVENT_MESSAGES, EVENT_ERRORS } from '../utils/backendConsts'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-// GET: /event
 export const getEvents: RequestHandler = async (_req, res) => {
   try {
     const events = await prisma.event.findMany({
@@ -13,65 +13,62 @@ export const getEvents: RequestHandler = async (_req, res) => {
         description: true,
         price: true,
         images: true,
-        date: true
+        date: true,
       },
-      orderBy: { date: 'desc' }
-    });
+      orderBy: { date: 'desc' },
+    })
 
-    res.status(200).json(events);
+    res.status(200).json(events)
   } catch (error) {
-    console.error('Error al obtener eventos:', error);
-    res.status(500).json({ message: 'Error al obtener eventos' });
+    console.error(EVENT_ERRORS.FETCH, error)
+    res.status(500).json({ message: EVENT_MESSAGES.FETCH_ERROR })
   }
-};
+}
 
-// POST: /update
 export const updateEvent: RequestHandler = async (req, res) => {
-  const { id, title, description, price, date, images } = req.body;
+  const { id, title, description, price, date, images } = req.body
 
   if (!id) {
-    res.status(400).json({ message: 'Missing event ID' });
-    return;
+    res.status(400).json({ message: EVENT_MESSAGES.MISSING_ID })
+    return
   }
 
   try {
     const updatedEvent = await prisma.event.update({
       where: { id },
-      data: { title, description, price, date, images }
-    });
+      data: { title, description, price, date, images },
+    })
 
-    res.status(200).json({ message: 'Event updated successfully', event: updatedEvent });
+    res.status(200).json({ message: EVENT_MESSAGES.UPDATE_SUCCESS, event: updatedEvent })
   } catch (err) {
-    console.error('🔥 Error updating event:', err);
-    res.status(500).json({ message: 'Server error updating event' });
+    console.error(EVENT_ERRORS.UPDATE, err)
+    res.status(500).json({ message: EVENT_MESSAGES.UPDATE_ERROR })
   }
-};
+}
 
-// POST: /delete
 export const deleteEvent: RequestHandler = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.body
 
   if (!id) {
-    res.status(400).json({ message: 'Missing ID' });
-    return;
+    res.status(400).json({ message: EVENT_MESSAGES.MISSING_ID })
+    return
   }
 
   try {
-    await prisma.event.delete({ where: { id } });
-    res.status(200).json({ message: 'Event deleted' });
+    await prisma.event.delete({ where: { id } })
+    res.status(200).json({ message: EVENT_MESSAGES.DELETE_SUCCESS })
   } catch (err) {
-    console.error('🔥 Error deleting event:', err);
-    res.status(500).json({ message: 'Failed to delete event' });
+    console.error(EVENT_ERRORS.DELETE, err)
+    res.status(500).json({ message: EVENT_MESSAGES.DELETE_ERROR })
   }
-};
+}
 
-// POST: /create
 export const createEvent: RequestHandler = async (req, res) => {
-  const { title, description, price, date, images, creatorId } = req.body;
+  const { title, description, price, date, images, creatorId } = req.body
 
   if (!title || !description || !price || !date || !creatorId) {
-    res.status(400).json({ message: 'Missing required data' });
-    return;
+    res.status(400).json({ message: EVENT_MESSAGES.MISSING_DATA })
+    return
   }
 
   try {
@@ -82,13 +79,13 @@ export const createEvent: RequestHandler = async (req, res) => {
         price,
         date: new Date(date),
         images,
-        creatorId
-      }
-    });
+        creatorId,
+      },
+    })
 
-    res.status(201).json({ message: 'Event created', event: newEvent });
+    res.status(201).json({ message: EVENT_MESSAGES.CREATE_SUCCESS, event: newEvent })
   } catch (error) {
-    console.error('❌ Error creating event:', error);
-    res.status(500).json({ message: 'Error creating event' });
+    console.error(EVENT_ERRORS.CREATE, error)
+    res.status(500).json({ message: EVENT_MESSAGES.CREATE_ERROR })
   }
-};
+}

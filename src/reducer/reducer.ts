@@ -18,6 +18,8 @@ export type State = {
   showDeleteModal: boolean
   selectedEvent: EventType | null
   eventToDelete: EventType | null
+  eventToPurchase: EventType | null
+  showPurchaseModal: boolean
 }
 
 export type Action =
@@ -30,6 +32,8 @@ export type Action =
   | { type: REDUCER_ACTIONS.SET_SHOW_DELETE_MODAL; payload: boolean }
   | { type: REDUCER_ACTIONS.SET_SELECTED_EVENT; payload: EventType | null }
   | { type: REDUCER_ACTIONS.SET_EVENT_TO_DELETE; payload: EventType | null }
+  | { type: REDUCER_ACTIONS.SET_EVENT_TO_PURCHASE; payload: EventType | null }
+  | { type: REDUCER_ACTIONS.SET_SHOW_PURCHASE_MODAL; payload: boolean }
 
 export type EventType = {
   id: number
@@ -56,6 +60,8 @@ export const initialState: State = {
   showDeleteModal: false,
   selectedEvent: null,
   eventToDelete: null,
+  eventToPurchase: null,
+  showPurchaseModal: false,
 }
 
 export const reducer = (state: State, action: Action): State => {
@@ -85,6 +91,12 @@ export const reducer = (state: State, action: Action): State => {
   }
   if (action.type === REDUCER_ACTIONS.SET_EVENT_TO_DELETE) {
     return { ...state, eventToDelete: action.payload }
+  }
+  if (action.type === REDUCER_ACTIONS.SET_EVENT_TO_PURCHASE) {
+    return { ...state, eventToPurchase: action.payload }
+  }
+  if (action.type === REDUCER_ACTIONS.SET_SHOW_PURCHASE_MODAL) {
+    return { ...state, showPurchaseModal: action.payload }
   }
 
   return state

@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useReducer, useContext, createContext, ReactNode } from 'react'
 import { reducer, initialState, State, Action } from '../reducer/reducer'
+import { USE_STORE_ERROR } from '../utils/frontendConsts'
 
 type StoreContextType = {
   state: State
@@ -25,7 +26,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 export const useStore = () => {
   const context = useContext(StoreContext)
   if (!context) {
-    throw new Error('useStore must be used within a StoreProvider')
+    throw new Error(USE_STORE_ERROR)
   }
   return context
 }

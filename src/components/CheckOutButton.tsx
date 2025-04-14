@@ -1,30 +1,35 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { BACKEND } from '../utils/const'
+import { BACKEND, ENDPOINTS } from '../utils/frontendConsts'
+import { Spinner } from './Icons'
 
 interface Props {
   title: string
   price: number
+  user: number | undefined
+  eventId: number
 }
 
 initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY, {
   locale: 'en-US',
 })
 
-export default function CheckOutButton({ title, price }: Props) {
-  const [preferenceId, setPreferenceId] = useState(null)
+// this generates the mercado pago pay button, used in purchase modal
+export default function CheckOutButton({ title, price, user, eventId }: Props) {
+  const [preferenceId, setPreferenceId] = useState<string | null>(null)
 
   useEffect(() => {
     ;(async () => {
       try {
         const response = await axios.post(
-          `${BACKEND}/create_preference`,
+          `${BACKEND}/${ENDPOINTS.CREATE_PREFERENCE}`,
           {
-            id: preferenceId,
-            title: title,
+            id: Date.now() + (user as number),
+            title,
             unit_price: price,
+            userId: user,
+            eventId,
           }
         )
 
@@ -33,9 +38,15 @@ export default function CheckOutButton({ title, price }: Props) {
         console.error(error)
       }
     })()
-  }, [price, title])
+  }, [price, title, user, eventId])
 
   return (
-    <div>{preferenceId && <Wallet initialization={{ preferenceId }} />}</div>
+    <div>
+      {preferenceId ? (
+        <Wallet initialization={{ preferenceId }} />
+      ) : (
+        <Spinner />
+      )}
+    </div>
   )
 }

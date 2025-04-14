@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import axios from 'axios'
 import { createContext, ReactNode, useEffect } from 'react'
-import { BACKEND } from '../utils/const'
+import { AUTH_CONTEXT, BACKEND } from '../utils/frontendConsts'
 import { ACTIONS, REDUCER_ACTIONS } from '../../types.d'
 import { useStore } from '../hooks/useStore'
 import { State } from '../reducer/reducer'
@@ -20,16 +20,15 @@ export const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { state, dispatch } = useStore()
-  console.log('AuthProvider state', state)
 
   const logout = () => {
-    localStorage.removeItem('user')
+    localStorage.removeItem(AUTH_CONTEXT.LOCAL_STORAGE_KEY)
     dispatch({ type: REDUCER_ACTIONS.SET_USER, payload: null })
   }
 
   useEffect(() => {
     const checkAuth = async () => {
-      const storedUser = localStorage.getItem('user')
+      const storedUser = localStorage.getItem(AUTH_CONTEXT.LOCAL_STORAGE_KEY)
 
       if (!storedUser) {
         dispatch({ type: REDUCER_ACTIONS.SET_LOADING, payload: false })
@@ -49,7 +48,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           logout()
         }
       } catch (err) {
-        console.error('Error al verificar usuario', err)
+        console.error(AUTH_CONTEXT.ERROR_CHECKING_USER, err)
         logout()
       } finally {
         dispatch({ type: REDUCER_ACTIONS.SET_LOADING, payload: false })

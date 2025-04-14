@@ -1,4 +1,5 @@
 import { EventType } from '../../types.d'
+import { MODAL_TEXTS } from '../utils/frontendConsts' // Ajusta el path
 
 interface DeleteModalProps {
   eventToDelete: EventType | null
@@ -7,7 +8,7 @@ interface DeleteModalProps {
   handleConfirmDelete: () => void
 }
 
-//this modal is shown when a admin wants to delete a event, it asks the admin to confirm the delete to avoid human errors
+// this modal is displayed when an admin wants to delete a event, it asks for confirmation to avoid human mistakes
 export default function DeleteModal({
   eventToDelete,
   setShowDeleteModal,
@@ -20,15 +21,17 @@ export default function DeleteModal({
         {eventToDelete ? (
           <>
             <h3 className="text-xl font-bold mb-4">
-              Delete "{eventToDelete.title}"?
+              {MODAL_TEXTS.DELETE_EVENT_TITLE} "{eventToDelete.title}"?
             </h3>
-            <p className="mb-6 text-gray-300">This action can't be undone.</p>
+            <p className="mb-6 text-gray-300">
+              {MODAL_TEXTS.DELETE_EVENT_CONFIRM}
+            </p>
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleConfirmDelete}
                 className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
               >
-                Confirm
+                {MODAL_TEXTS.BUTTON_CONFIRM}
               </button>
               <button
                 onClick={() => {
@@ -37,12 +40,12 @@ export default function DeleteModal({
                 }}
                 className="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700"
               >
-                Cancel
+                {MODAL_TEXTS.BUTTON_CANCEL}
               </button>
             </div>
           </>
         ) : (
-          <p className="text-gray-300">There are no events to delete.</p>
+          <p className="text-gray-300">{MODAL_TEXTS.NO_EVENTS_TO_DELETE}</p>
         )}
       </div>
     </div>

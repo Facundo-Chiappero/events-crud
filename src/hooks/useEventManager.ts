@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import axios from 'axios'
-import { BACKEND } from '../utils/const'
+import {
+  BACKEND,
+  ENDPOINTS,
+  EVENT_MANAGER_ERRORS,
+} from '../utils/frontendConsts'
 import { REDUCER_ACTIONS } from '../../types.d'
 import { useStore } from './useStore'
 import { EventType } from '../reducer/reducer'
@@ -15,8 +19,12 @@ export const useEventManager = () => {
   }, [state.user])
 
   const fetchEvents = async () => {
-    const res = await axios.get(`${BACKEND}/event`)
-    dispatch({ type: REDUCER_ACTIONS.SET_EVENTS, payload: res.data })
+    try {
+      const res = await axios.get(`${BACKEND}/${ENDPOINTS.GET_EVENTS}`)
+      dispatch({ type: REDUCER_ACTIONS.SET_EVENTS, payload: res.data })
+    } catch (err) {
+      console.error(EVENT_MANAGER_ERRORS.ERROR_FETCHING_EVENTS, err)
+    }
   }
 
   const handleInputChange = (
@@ -49,7 +57,7 @@ export const useEventManager = () => {
   const handleCreateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      await axios.post(`${BACKEND}/create`, {
+      await axios.post(`${BACKEND}/${ENDPOINTS.CREATE_EVENT}`, {
         title: state.formData.title,
         description: state.formData.description,
         date: new Date(state.formData.date).toISOString(),
@@ -60,7 +68,7 @@ export const useEventManager = () => {
       dispatch({ type: REDUCER_ACTIONS.SET_SHOW_CREATE_MODAL, payload: false })
       fetchEvents()
     } catch (err) {
-      console.error('Error creating event:', err)
+      console.error(EVENT_MANAGER_ERRORS.ERROR_CREATING_EVENT, err)
     }
   }
 
@@ -84,7 +92,7 @@ export const useEventManager = () => {
     if (!state.selectedEvent) return
 
     try {
-      await axios.post(`${BACKEND}/update`, {
+      await axios.post(`${BACKEND}/${ENDPOINTS.UPDATE_EVENT}`, {
         id: state.selectedEvent.id,
         title: state.formData.title,
         description: state.formData.description,
@@ -97,7 +105,7 @@ export const useEventManager = () => {
       dispatch({ type: REDUCER_ACTIONS.SET_SELECTED_EVENT, payload: null })
       fetchEvents()
     } catch (err) {
-      console.error('Error updating event:', err)
+      console.error(EVENT_MANAGER_ERRORS.ERROR_UPDATING_EVENT, err)
     }
   }
 
@@ -109,14 +117,26 @@ export const useEventManager = () => {
   const handleConfirmDelete = async () => {
     if (!state.eventToDelete) return
     try {
-      await axios.post(`${BACKEND}/delete`, { id: state.eventToDelete.id })
+      await axios.post(`${BACKEND}/${ENDPOINTS.DELETE_EVENT}`, {
+        id: state.eventToDelete.id,
+      })
       fetchEvents()
     } catch (err) {
-      console.error('Error deleting event:', err)
+      console.error(EVENT_MANAGER_ERRORS.ERROR_DELETING_EVENT, err)
     } finally {
       dispatch({ type: REDUCER_ACTIONS.SET_SHOW_DELETE_MODAL, payload: false })
       dispatch({ type: REDUCER_ACTIONS.SET_EVENT_TO_DELETE, payload: null })
     }
+  }
+
+  const openPurchaseModal = (event: EventType) => {
+    dispatch({ type: REDUCER_ACTIONS.SET_EVENT_TO_PURCHASE, payload: event })
+    dispatch({ type: REDUCER_ACTIONS.SET_SHOW_PURCHASE_MODAL, payload: true })
+  }
+
+  const closePurchaseModal = () => {
+    dispatch({ type: REDUCER_ACTIONS.SET_SHOW_PURCHASE_MODAL, payload: false })
+    dispatch({ type: REDUCER_ACTIONS.SET_EVENT_TO_PURCHASE, payload: null })
   }
 
   return {
@@ -126,6 +146,8 @@ export const useEventManager = () => {
     showDeleteModal: state.showDeleteModal,
     selectedEvent: state.selectedEvent,
     eventToDelete: state.eventToDelete,
+    eventToPurchase: state.eventToPurchase,
+    showPurchaseModal: state.showPurchaseModal,
     handleInputChange,
     openCreateModal,
     handleCreateSubmit,
@@ -133,6 +155,8 @@ export const useEventManager = () => {
     handleUpdateSubmit,
     openDeleteModal,
     handleConfirmDelete,
+    openPurchaseModal,
+    closePurchaseModal,
     setShowUpdateModal: (val: boolean) =>
       dispatch({ type: REDUCER_ACTIONS.SET_SHOW_MODAL, payload: val }),
     setShowCreateModal: (val: boolean) =>

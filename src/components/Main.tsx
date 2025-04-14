@@ -6,6 +6,8 @@ import DeleteModal from '../modals/DeleteModal'
 import { useEventManager } from '../hooks/useEventManager'
 import { useStore } from '../hooks/useStore'
 import MainHeader from './MainHeader'
+import PurchaseModal from '../modals/PurchaseModal'
+import { MAIN } from '../utils/frontendConsts'
 // import CheckOutButton from './CheckOutButton';
 
 // here is were most of the things happen, in the top there's th header with the buttons to create a new event if the user is admin, and the button to log out
@@ -21,6 +23,8 @@ export default function Main() {
     showDeleteModal,
     selectedEvent,
     eventToDelete,
+    eventToPurchase,
+    showPurchaseModal,
     handleInputChange,
     openCreateModal,
     handleCreateSubmit,
@@ -32,6 +36,8 @@ export default function Main() {
     setShowCreateModal,
     setShowDeleteModal,
     setEventToDelete,
+    openPurchaseModal,
+    closePurchaseModal,
   } = useEventManager()
 
   return (
@@ -66,7 +72,8 @@ export default function Main() {
               </div>
 
               <p className="text-sm text-gray-400 mb-1">
-                Price: ${event.price}
+                {MAIN.PRICE_LABEL}
+                {event.price}
               </p>
               <time className="text-sm text-gray-400">
                 {new Date(event.date).toLocaleString('en-US', {
@@ -96,24 +103,18 @@ export default function Main() {
                 </div>
               )}
 
-              {/* for a reason i can't figure out all the mercado pago buttons are displayed in the same event, i think it's a matter of synchrony if you want to check it out remove the comment for the CheckOutButton import */}
-
-              {/* 
-              
               {state.user?.role === ROLES.USER && (
-                <div className="mt-4 w-full">
-                  <CheckoutButton
-                    price={event.price}
-                    title={event.title}
-                  />
-                </div>
+                <button
+                  onClick={() => openPurchaseModal(event)}
+                  className="bg-green-500 text-white p-3 rounded hover:bg-green-600 mt-4"
+                >
+                  {MAIN.BUY_BUTTON}
+                </button>
               )}
-              
-              */}
             </article>
           ))
         ) : (
-          <div>There are no events</div>
+          <div>{MAIN.NO_EVENTS_MESSAGE}</div>
         )}
       </main>
 
@@ -141,6 +142,13 @@ export default function Main() {
           setShowDeleteModal={setShowDeleteModal}
           setEventToDelete={setEventToDelete}
           handleConfirmDelete={handleConfirmDelete}
+        />
+      )}
+      {showPurchaseModal && eventToPurchase && (
+        <PurchaseModal
+          event={eventToPurchase}
+          onClose={closePurchaseModal}
+          user={state.user?.id}
         />
       )}
     </div>
